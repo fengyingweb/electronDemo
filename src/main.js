@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('node:path')
 const createWindow = ()=> {
   const mainWindow = new BrowserWindow({
@@ -17,7 +17,7 @@ const createWindow = ()=> {
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
   // 打开开发者工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 // 这段程序将会在 Electron 结束初始化
@@ -25,6 +25,12 @@ const createWindow = ()=> {
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(()=> {
   ipcMain.handle('ping', ()=> ({code: '0', data: 'pong', msg: 'success'}))
+  ipcMain.handle('dialog:openFile', async ()=> {
+    const {canceled, filePaths} = await dialog.showOpenDialog()
+    if (!canceled) {
+      return filePaths[0]
+    }
+  })
   createWindow()
 
   app.on('activate', ()=> {
