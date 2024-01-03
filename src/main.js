@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
 const path = require('node:path')
 const createWindow = ()=> {
   const mainWindow = new BrowserWindow({
@@ -8,16 +8,33 @@ const createWindow = ()=> {
       preload: path.join(__dirname, 'preload.js')
     }
   })
+
+  const menu = Menu.buildFromTemplate([
+    {
+      label: '计数器',
+      submenu: [
+        {
+          click: ()=> mainWindow.webContents.send('update-counter', 1), // 发送消息给渲染进程
+          label: '加'
+        },
+        {
+          click: ()=> mainWindow.webContents.send('update-counter', -1),
+          label: '减'
+        }
+      ]
+    }
+  ])
   // 主进程接收渲染进程消息
   ipcMain.on('set-title', (ev, title)=> {
     const webContents = ev.sender
     const win = BrowserWindow.fromWebContents(webContents)
     win.setTitle(title)
   })
+  Menu.setApplicationMenu(menu)
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
   // 打开开发者工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 // 这段程序将会在 Electron 结束初始化
@@ -30,6 +47,9 @@ app.whenReady().then(()=> {
     if (!canceled) {
       return filePaths[0]
     }
+  })
+  ipcMain.on('counter-value', (_event, value)=> {
+    console.log(value)
   })
   createWindow()
 
