@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   ping: ()=> ipcRenderer.invoke('ping'),
   setTitle: (title)=> ipcRenderer.send('set-title', title), // 渲染进程发送消息给主进程
+  openFile: ()=> ipcRenderer.invoke('dialog:openFile')
 })
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
