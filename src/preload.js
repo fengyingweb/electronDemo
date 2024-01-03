@@ -1,10 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
-contextBridge.exposeInMainWorld('versions', {
-  chrome: process.versions.chrome,
-  electron: process.versions.electron,
-  node: process.versions.node,
-  ping: ()=> ipcRenderer.invoke('ping')
+contextBridge.exposeInMainWorld('electronAPI', {
+  versions: {
+    chrome: process.versions.chrome,
+    electron: process.versions.electron,
+    node: process.versions.node,
+  },
+  ping: ()=> ipcRenderer.invoke('ping'),
+  setTitle: (title)=> ipcRenderer.send('set-title', title), // 渲染进程发送消息给主进程
 })
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
