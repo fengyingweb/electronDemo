@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu, nativeTheme } = require('electron')
 const path = require('node:path')
 const createWindow = ()=> {
   const mainWindow = new BrowserWindow({
@@ -50,6 +50,17 @@ app.whenReady().then(()=> {
   })
   ipcMain.on('counter-value', (_event, value)=> {
     console.log(value)
+  })
+  ipcMain.handle('dark-mode:toggle', ()=> {
+    if (nativeTheme.shouldUseDarkColors) {
+      nativeTheme.themeSource = 'light'
+    } else {
+      nativeTheme.themeSource = 'dark'
+    }
+    return nativeTheme.shouldUseDarkColors
+  })
+  ipcMain.handle('dark-mode:system', ()=> {
+    nativeTheme.themeSource = 'system'
   })
   createWindow()
 
