@@ -1,4 +1,4 @@
-const {versions, ping, setTitle, openFile, onUpdateCounter, counterValue} = electronAPI
+const {versions, ping, setTitle, openFile, onUpdateCounter, counterValue, toggleTheme, systemTheme} = electronAPI
 const infoDom = document.querySelector('#info')
 infoDom.innerText = `本应用正在使用 Chrome (v${versions.chrome}), Node.js (v${versions.node}), 和 Electron (v${versions.electron})`
 
@@ -28,4 +28,16 @@ onUpdateCounter((value)=> {
   const newValue = oldValue + value
   counter.innerText = newValue.toString()
   counterValue(newValue)
+})
+
+const themeSource = document.querySelector('#theme-source')
+const toggleBtn = document.querySelector('#toggle-dark-mode')
+const resetBtn = document.querySelector('#reset-to-system')
+toggleBtn.addEventListener('click', async ()=> {
+  const isDarkMode = await toggleTheme()
+  themeSource.innerText = isDarkMode ? 'Dark' : 'Light'
+})
+resetBtn.addEventListener('click', async ()=> {
+  await systemTheme()
+  themeSource.innerText = 'System'
 })
