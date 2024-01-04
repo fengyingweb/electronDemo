@@ -10,7 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setTitle: (title)=> ipcRenderer.send('set-title', title), // 渲染进程发送消息给主进程
   openFile: ()=> ipcRenderer.invoke('dialog:openFile'), // 双向通信
   onUpdateCounter: (callback)=> ipcRenderer.on('update-counter', (_event, value)=> callback(value)), // 接收主进程消息
-  counterValue: (value)=> ipcRenderer.send('counter-value', value)
+  counterValue: (value)=> ipcRenderer.send('counter-value', value),
+  toggleTheme: ()=> ipcRenderer.invoke('dark-mode:toggle'),
+  systemTheme: ()=> ipcRenderer.invoke('dark-mode:system')
 })
 
 // 所有的 Node.js API接口 都可以在 preload 进程中被调用.
