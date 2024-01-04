@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
     <title>你好!</title>
   </head>
   <body>
@@ -23,6 +24,10 @@
     <div>
       <span>当前值：</span><strong id="counter">0</strong>
     </div>
+    <div>Current theme source: <strong id="theme-source">System</strong></div>
+
+    <button id="toggle-dark-mode">Toggle Dark Mode</button>
+    <button id="reset-to-system">Reset to System Theme</button>
     <script type="module" src="./js/render.js"></script>
   </body>
 </html>
